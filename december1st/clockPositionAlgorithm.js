@@ -23,6 +23,7 @@ class Clock {
 
 }
 
+// Part One
 async function clockPositionAlgorithm (target) {
     const clock = new Clock(0, 99, 50)
     const rotationInstructions = await readInput()
@@ -47,5 +48,5 @@ async function clockPositionAlgorithm (target) {
     return hitTargetCounter
 }
 
-const result = await clockPositionAlgorithm(0)
-console.log(result);
+const resultPartOne = await clockPositionAlgorithm(0)
+console.log(resultPartOne);
