@@ -6,7 +6,6 @@ async function readInput () {
     return ids
 }
 
-
 function amountOfInvalidIDs (ids) {
     let sum = 0
 
@@ -27,17 +26,27 @@ function amountOfInvalidIDs (ids) {
     return sum
 }
 
-function isValueInvalid (value) {
-    const valueString = `${value}`
+function isValueInvalid(value) {
+    const valueString = String(value)
+    const size = valueString.length
 
-    if (valueString.length % 2 !== 0) {
-        return false
+    let blockLength = 1
+    while (blockLength <= Math.floor(size / 2)) {
+        if (size % blockLength === 0) {
+            const valueStringBlock = valueString.slice(0, blockLength)
+            const repetitions = size / blockLength
+
+            const candidateBlock = valueStringBlock.repeat(repetitions)
+
+            if (candidateBlock === valueString) {
+                return true
+            }            
+        }
+
+        blockLength++
     }
 
-    const leftSide = parseInt(valueString.slice(0, valueString.length / 2))
-    const rightSide = parseInt(valueString.slice(valueString.length / 2, valueString.length))
-    
-    return leftSide / rightSide === 1    
+    return false
 }
 
 const ids = await readInput()
