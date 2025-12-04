@@ -7,35 +7,36 @@ async function readInput () {
     return batteries
 }
 
-function maximumJoltageForEachBank (batteriBanks) {
+function maximumJoltageForEachBank (batteriBanks, digitLimit) {
     let sum = 0
 
     for (const batteriBank of batteriBanks) {
-        if (batteriBank.length !== 0) {
-            
-            let firstDigitIndex = highestJoltageForBatteryBank(
-                0, 
-                batteriBank.length - 1, 
-                batteriBank
-            )
-            let secondDigitIndex = highestJoltageForBatteryBank(
-                firstDigitIndex + 1,
-                batteriBank.length,
-                batteriBank
-            )
-            const number = String(
-                batteriBank.charAt(firstDigitIndex) + batteriBank.charAt(secondDigitIndex)
-            )
-
-            sum += parseInt(number)
+        if (batteriBank.length === 0) {
+            continue
         }
+        let number = ''
+        let lowerIndexLimit = 0
+
+        for (let digitCounter = digitLimit; digitCounter > 0; digitCounter--) {
+            const upperIndexLimit = batteriBank.length - (digitCounter - 1)
+
+            const nextDigitIndex = highestJoltageForBatteryBank(
+                lowerIndexLimit, 
+                upperIndexLimit, 
+                batteriBank
+            )
+            lowerIndexLimit = nextDigitIndex + 1
+            number += batteriBank.charAt(nextDigitIndex)
+        }
+
+        sum += parseInt(number)
     }
 
     return sum
 }
 
 function highestJoltageForBatteryBank (low, high, batteriBank) {
-    let highestDigitIndex = low;
+    let highestDigitIndex = -1;
     let currentHighestJoltage = 0
 
     let currentIndex = low
@@ -52,6 +53,6 @@ function highestJoltageForBatteryBank (low, high, batteriBank) {
 }
 
 const batteries = await readInput()
-const result = maximumJoltageForEachBank(batteries)
+const result = maximumJoltageForEachBank(batteries, 12)
 console.log(result)
 
