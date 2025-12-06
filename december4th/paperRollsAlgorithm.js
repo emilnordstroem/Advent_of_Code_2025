@@ -24,6 +24,29 @@ function howManyPaperRollsCanBeAccessed (paperRolls) {
     return paperRollCounter
 }
 
+function howManyPaperRollsCanBeRemoved (paperRolls, removedPreviousRound, paperRollsRemoved) {
+    if (removedPreviousRound === 0) {
+        return paperRollsRemoved
+    }
+
+    let paperRollsRemovedThisRound = 0
+
+    for (let currentRow = 0; currentRow < paperRolls.length; currentRow++) {
+        for (let currentColumn = 0; currentColumn < paperRolls[currentRow].length; currentColumn++) {
+            const currentField = paperRolls[currentRow][currentColumn]
+            if (doesFieldContainPaperRoll(currentField)) {
+                const canPaperRollBeAccessed = checkSurroundingFields(paperRolls, currentRow, currentColumn)
+                if (canPaperRollBeAccessed) {
+                    paperRolls[currentRow][currentColumn] = '.'
+                    paperRollsRemovedThisRound++
+                }
+            }
+        }
+    }
+
+    return howManyPaperRollsCanBeRemoved(paperRolls, paperRollsRemovedThisRound, paperRollsRemoved + paperRollsRemovedThisRound)
+}
+
 function checkSurroundingFields (paperRolls, baseRow, baseColumn) {
     let paperRollCounter = 0
 
@@ -52,5 +75,7 @@ function doesFieldContainPaperRoll (field) {
 }
 
 const paperRolls = await readInput() 
-const result = howManyPaperRollsCanBeAccessed(paperRolls)
-console.log(result);
+let result = howManyPaperRollsCanBeAccessed(paperRolls)
+console.log('How many paper rolls can be accessed? - ', result);
+result = howManyPaperRollsCanBeRemoved(paperRolls, -1, 0)
+console.log('How many paper rolls can be removed? - ', result);
